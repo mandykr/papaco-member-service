@@ -32,15 +32,17 @@ class MemberAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> createResponse = 회원_정보_생성_요청(1L);
         회원_정보_생성됨(createResponse);
 
-        //TODO: find
+        // find
+        ExtractableResponse<Response> findResponse = 회원_정보_조회_요청(createResponse);
+        회원_정보_조회됨(findResponse);
 
         // update
         ArrayList<Map<String, Object>> careers = new ArrayList<>();
         careers.add(카카오);
         careers.add(네이버);
         careers.add(구글);
-        List<String> techStacks = createTechStacks("java", "mysql");
-        ExtractableResponse<Response> updateResponse = 회원_정보_수정_요청(createResponse, careers, techStacks);
+        List<Long> techStackIds = createTechStacks(1L, 2L);
+        ExtractableResponse<Response> updateResponse = 회원_정보_수정_요청(createResponse, careers, techStackIds);
         회원_정보_수정됨(updateResponse);
     }
 }

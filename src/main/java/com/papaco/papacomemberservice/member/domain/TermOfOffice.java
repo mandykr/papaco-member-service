@@ -25,27 +25,15 @@ public class TermOfOffice {
         this.leavedDate = leavedDate;
     }
 
-    public static TermOfOffice createWorking(LocalDate joinedDate) {
-        return new TermOfOffice(joinedDate, LocalDate.MAX);
-    }
-
     private void validate(LocalDate joinedDate, LocalDate leavedDate) {
         if (Objects.isNull(joinedDate) ||
-                !joinedDate.isBefore(leavedDate)) {
+                isNotWorking(joinedDate, leavedDate)) {
             throw new IllegalArgumentException();
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TermOfOffice that = (TermOfOffice) o;
-        return joinedDate.equals(that.joinedDate) && leavedDate.equals(that.leavedDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(joinedDate, leavedDate);
+    private boolean isNotWorking(LocalDate joinedDate, LocalDate leavedDate) {
+        return !Objects.isNull(leavedDate) &&
+                !joinedDate.isBefore(leavedDate);
     }
 }

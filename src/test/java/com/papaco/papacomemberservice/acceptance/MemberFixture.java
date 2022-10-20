@@ -47,7 +47,7 @@ public class MemberFixture {
         return createCareer(corporateName, duty, joinedDate, null);
     }
 
-    public static List<String> createTechStacks(String... techStacks) {
-        return List.of(techStacks);
+    public static List<Long> createTechStacks(Long... techStackIds) {
+        return List.of(techStackIds);
     }
 }

@@ -1,6 +1,7 @@
 package com.papaco.papacomemberservice.unit.member.domain;
 
 import com.papaco.papacomemberservice.member.domain.Career;
+import com.papaco.papacomemberservice.member.domain.Member;
 import com.papaco.papacomemberservice.member.domain.TermOfOffice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +28,7 @@ class CareerTest {
     @Test
     void create() {
         assertThatCode(() ->
-                new Career("주식회사", "개발자", termOfOffice))
+                new Career("주식회사", "개발자", termOfOffice, new Member(1L)))
                 .doesNotThrowAnyException();
     }
 
@@ -35,7 +36,7 @@ class CareerTest {
     @ParameterizedTest
     @NullAndEmptySource
     void corporateNameIsEmpty(String corporateName) {
-        assertThatThrownBy(() -> new Career(corporateName, "개발자", termOfOffice))
+        assertThatThrownBy(() -> new Career(corporateName, "개발자", termOfOffice, new Member(1L)))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -43,7 +44,7 @@ class CareerTest {
     @ParameterizedTest
     @NullAndEmptySource
     void dutyIsEmpty(String duty) {
-        assertThatThrownBy(() -> new Career("주식회사", duty, termOfOffice))
+        assertThatThrownBy(() -> new Career("주식회사", duty, termOfOffice, new Member(1L)))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

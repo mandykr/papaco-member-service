@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static com.papaco.papacomemberservice.member.domain.TermOfOffice.createWorking;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class TermOfOfficeTest {
     @DisplayName("입사일, 퇴사일로 재직 기간을 생성한다")
@@ -24,8 +24,9 @@ class TermOfOfficeTest {
     @Test
     void working() {
         assertThatCode(() ->
-                createWorking(
-                        LocalDate.of(2021, 01, 01)))
+                new TermOfOffice(
+                        LocalDate.of(2021, 01, 01),
+                        null))
                 .doesNotThrowAnyException();
     }
 

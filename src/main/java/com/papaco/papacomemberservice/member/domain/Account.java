@@ -17,8 +17,12 @@ public class Account {
     @Column(nullable = false)
     private String userName;
 
-    public Account(Long id, String userName) {
+    @Column(nullable = false)
+    private String name;
+
+    public Account(Long id, String userName, String name) {
         this.id = id;
         this.userName = userName;
+        this.name = name;
     }
 }

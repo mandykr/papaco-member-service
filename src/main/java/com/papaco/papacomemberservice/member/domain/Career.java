@@ -30,11 +30,12 @@ public class Career {
     )
     private Member member;
 
-    public Career(String corporateName, String duty, TermOfOffice termOfOffice) {
+    public Career(String corporateName, String duty, TermOfOffice termOfOffice, Member member) {
         validate(corporateName, duty);
         this.corporateName = corporateName;
         this.duty = duty;
         this.termOfOffice = termOfOffice;
+        this.member = member;
     }
 
     private void validate(String corporateName, String duty) {

@@ -1,7 +1,6 @@
 package com.papaco.papacomemberservice.unit.member.domain;
 
 import com.papaco.papacomemberservice.member.domain.Member;
-import com.papaco.papacomemberservice.member.domain.MemberTechStack;
 import com.papaco.papacomemberservice.member.domain.TechStack;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,15 +27,12 @@ class MemberTest {
         // given
         Member member = new Member(1L);
 
-        TechStack java = new TechStack("java");
-        TechStack mysql = new TechStack("mysql");
-
-        List<MemberTechStack> memberTechStacks = new ArrayList<>();
-        memberTechStacks.add(new MemberTechStack(member, java));
-        memberTechStacks.add(new MemberTechStack(member, mysql));
+        List<TechStack> techStacks = new ArrayList<>();
+        techStacks.add(new TechStack("java"));
+        techStacks.add(new TechStack("mysql"));
 
         // when
-        member.registerTechStacks(memberTechStacks);
+        member.registerTechStacks(techStacks);
 
         // then
         assertThat(member.getMemberTechStacks()).hasSize(2);
