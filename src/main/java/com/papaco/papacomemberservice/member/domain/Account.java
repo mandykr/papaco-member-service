@@ -19,10 +19,17 @@ public class Account {
 
     @Column(nullable = false)
     private String name;
+    private String email;
 
-    public Account(Long id, String userName, String name) {
+    public Account(Long id, String userName, String name, String email) {
         this.id = id;
         this.userName = userName;
         this.name = name;
+        this.email = email;
+    }
+
+    public void update(String name, String email) {
+        this.name = name;
+        this.email = email;
     }
 }
