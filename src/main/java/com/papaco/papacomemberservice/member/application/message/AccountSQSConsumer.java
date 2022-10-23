@@ -34,7 +34,7 @@ public class AccountSQSConsumer {
                     );
         } catch (JsonProcessingException | IllegalArgumentException e) {
             log.error("payload={}, headers={}", payload, headers, e);
-            throw new SQSMessageProcessingFaildException(e);
+            throw new SQSMessageProcessingFailedException(e);
         }
     }
 
