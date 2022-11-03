@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AccountEvent {
     private EventType eventType;
-    private Long id;
+    private Long aggregateId;
     private String userName;
     private String name;
     private String email;
     private String roleKey;
 
     public Account toAccount() {
-        return new Account(id, userName, name, email);
+        return new Account(aggregateId, userName, name, email);
     }
 }
