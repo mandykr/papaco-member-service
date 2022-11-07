@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.*;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static javax.persistence.GenerationType.*;
 
 @Service
 @ActiveProfiles("test")
@@ -18,18 +20,24 @@ public class DatabaseCleanup implements InitializingBean {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private List<String> tableNames;
+    private List<GenerationType> strategies;
 
-    private List<String> ignoreTableNames;
+    private List<String> tableNames;
 
     @Override
     public void afterPropertiesSet() {
-        ignoreTableNames = List.of("tech_stack", "account");
+        strategies = Arrays.asList(IDENTITY, SEQUENCE); // MYSQL -> 자동화 필요
+
         tableNames = entityManager.getMetamodel().getEntities().stream()
                 .filter(e -> e.getJavaType().getAnnotation(Entity.class) != null)
+                .filter(e -> {
+                    Field field = (Field) e.getDeclaredId(e.getIdType().getJavaType()).getJavaMember();
+                    GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
+                    GenerationType strategy = generatedValue == null ? null : generatedValue.strategy();
+                    return strategies.contains(strategy);
+                })
                 .map(e -> CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, e.getName()))
                 .collect(Collectors.toList());
-        tableNames.removeAll(ignoreTableNames);
     }
 
     @Transactional
