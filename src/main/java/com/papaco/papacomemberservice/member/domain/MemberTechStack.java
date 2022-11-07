@@ -15,14 +15,14 @@ public class MemberTechStack {
     @Id
     private Long seq;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(
             name = "member_id",
             foreignKey = @ForeignKey(name = "fk_member_tech_stack_to_member")
     )
     private Member member;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(
             name = "techStack_id",
             foreignKey = @ForeignKey(name = "fk_member_tech_stack_to_tech_stack")

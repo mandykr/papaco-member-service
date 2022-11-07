@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class MemberUpdateRequest {
     private List<Long> techStackIds;
     private List<CareerRequest> careers;
+    private boolean registeredReviewer;
 
     public List<Career> getCareerEntities(Member member) {
         return careers.stream().map(c -> CareerRequest.toCareer(member, c)).collect(Collectors.toList());

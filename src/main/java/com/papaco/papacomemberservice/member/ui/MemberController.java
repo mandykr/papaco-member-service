@@ -1,10 +1,11 @@
 package com.papaco.papacomemberservice.member.ui;
 
 import com.papaco.papacomemberservice.member.application.MemberService;
-import com.papaco.papacomemberservice.member.application.dto.MemberCreateRequest;
-import com.papaco.papacomemberservice.member.application.dto.MemberResponse;
-import com.papaco.papacomemberservice.member.application.dto.MemberUpdateRequest;
+import com.papaco.papacomemberservice.member.application.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,5 +33,13 @@ public class MemberController {
     public ResponseEntity<MemberResponse> updateMember(@PathVariable Long id, @RequestBody MemberUpdateRequest request) {
         MemberResponse member = memberService.updateMember(id, request);
         return ResponseEntity.ok().body(member);
+    }
+
+    @GetMapping("/reviewers")
+    public ResponseEntity<Page<MemberSearchResponse>> searchReviewers(
+            @PageableDefault(size = 10, page = 0) Pageable page,
+            @RequestBody MemberSearchRequest request) {
+        Page<MemberSearchResponse> reviewers = memberService.searchReviewers(page, request);
+        return ResponseEntity.ok().body(reviewers);
     }
 }
