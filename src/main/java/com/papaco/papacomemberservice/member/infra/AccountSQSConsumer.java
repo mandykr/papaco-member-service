@@ -31,7 +31,7 @@ public class AccountSQSConsumer implements AccountConsumer {
     private final ObjectMapper objectMapper;
 
     @Override
-    @SqsListener(value = "QUEUE-auth-to-member.fifo", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
+    @SqsListener(value = "sqs-login-account-update.fifo", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
     public void receive(String payload, @Headers Map<String, String> headers) {
         Long messageId = Long.getLong(headers.get(SqsMessageHeaders.SQS_DEDUPLICATION_ID_HEADER));
         Long aggregateId = Long.getLong(headers.get(SqsMessageHeaders.SQS_GROUP_ID_HEADER));
@@ -57,7 +57,7 @@ public class AccountSQSConsumer implements AccountConsumer {
                             entity -> entity.update(accountEvent.getName(), accountEvent.getEmail()),
                             () -> saveAccount(accountEvent)
                     );
-
+            // TODO: publish event
         } catch (JsonProcessingException | IllegalArgumentException e) {
             log.error("payload={}, headers={}", payload, headers, e);
             throw new MessageProcessingFailedException(e);
