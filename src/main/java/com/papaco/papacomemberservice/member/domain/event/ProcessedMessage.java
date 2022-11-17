@@ -15,4 +15,5 @@ public class ProcessedMessage {
     @Id
     private Long id;
     private Long aggregateId;
+    private String aggregateType;
 }

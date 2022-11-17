@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.papaco.papacomemberservice.member.application.message.AccountConsumer;
 import com.papaco.papacomemberservice.member.application.message.MessageReceiveDuplicatedException;
 import com.papaco.papacomemberservice.member.application.message.MessageProcessingFailedException;
+import com.papaco.papacomemberservice.member.application.outbox.OutboxMessageHeaders;
 import com.papaco.papacomemberservice.member.domain.Account;
 import com.papaco.papacomemberservice.member.domain.event.AccountEvent;
 import com.papaco.papacomemberservice.member.domain.event.ProcessedMessage;
@@ -35,15 +36,16 @@ public class AccountSQSConsumer implements AccountConsumer {
     public void receive(String payload, @Headers Map<String, String> headers) {
         Long messageId = Long.getLong(headers.get(SqsMessageHeaders.SQS_DEDUPLICATION_ID_HEADER));
         Long aggregateId = Long.getLong(headers.get(SqsMessageHeaders.SQS_GROUP_ID_HEADER));
+        String aggregateType = headers.get(OutboxMessageHeaders.AGGREGATE_TYPE);
 
-        checkDuplicate(messageId);
+        checkDuplicate(messageId, aggregateType);
         process(payload, headers);
-        saveProcessedMessage(messageId, aggregateId);
+        saveProcessedMessage(messageId, aggregateId, aggregateType);
     }
 
     @Override
-    public void checkDuplicate(Long duplicateId) {
-        if (eventRepository.findById(duplicateId).isPresent()) {
+    public void checkDuplicate(Long duplicateId, String aggregateType) {
+        if (eventRepository.findByIdAndAggregateType(duplicateId, aggregateType).isPresent()) {
             throw new MessageReceiveDuplicatedException(duplicateId);
         }
     }
@@ -57,7 +59,6 @@ public class AccountSQSConsumer implements AccountConsumer {
                             entity -> entity.update(accountEvent.getName(), accountEvent.getEmail()),
                             () -> saveAccount(accountEvent)
                     );
-            // TODO: publish event
         } catch (JsonProcessingException | IllegalArgumentException e) {
             log.error("payload={}, headers={}", payload, headers, e);
             throw new MessageProcessingFailedException(e);
@@ -70,7 +71,7 @@ public class AccountSQSConsumer implements AccountConsumer {
     }
 
     @Override
-    public void saveProcessedMessage(Long messageId, Long aggregateId) {
-        eventRepository.save(new ProcessedMessage(messageId, aggregateId));
+    public void saveProcessedMessage(Long messageId, Long aggregateId, String aggregateType) {
+        eventRepository.save(new ProcessedMessage(messageId, aggregateId, aggregateType));
     }
 }
